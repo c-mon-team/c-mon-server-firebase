@@ -1,17 +1,6 @@
-const convertSnakeToCamel = require('../modules/convertSnakeToCamel');
+const convertSnakeToCamel = require("../modules/convertSnakeToCamel");
 
-const createMemberChoice = async (client, code, userName, choice) => {
-  const { rows: group } = await client.query(
-    `
-      SELECT *
-      FROM "group"
-      WHERE code = $1
-      `,
-    [code],
-  );
-
-  const groupId = group[0].id;
-
+const createMemberChoice = async (client, groupId, userName, choice) => {
   const { rows: createMember } = await client.query(
     `
     INSERT INTO member
@@ -19,7 +8,7 @@ const createMemberChoice = async (client, code, userName, choice) => {
     VALUES ($1, $2)
     RETURNING *
     `,
-    [userName, groupId],
+    [userName, groupId]
   );
   const member = createMember[0].id;
   for (let c of choice) {
@@ -29,7 +18,7 @@ const createMemberChoice = async (client, code, userName, choice) => {
         FROM subcategory
         WHERE name = $1
         `,
-      [c],
+      [c]
     );
     if (!subcategory[0]) {
       throw 404;
@@ -42,24 +31,36 @@ const createMemberChoice = async (client, code, userName, choice) => {
         VALUES ($1, $2)
         RETURNING *
         `,
-      [member, subcategory[0].id],
+      [member, subcategory[0].id]
     );
   }
-  console.log(createMember);
-  return convertSnakeToCamel.keysToCamel(createMember[0]);
+  return convertSnakeToCamel.keysToCamel(createMember);
 };
 
 const deleteMemberChoice = async (client, id) => {
-  const { rows: deleteMember } = await client.query(
+  const { rows: deleteMemberChoice } = await client.query(
     `
     DELETE FROM choice
     WHERE member_id=$1
     RETURNING *
     `,
-    [id],
+    [id]
+  );
+
+  return convertSnakeToCamel.keysToCamel(deleteMemberChoice);
+};
+
+const deleteMember = async (client, id) => {
+  const { rows: deleteMember } = await client.query(
+    `
+    DELETE FROM member
+    WHERE id=$1
+    RETURNING *
+    `,
+    [id]
   );
 
   return convertSnakeToCamel.keysToCamel(deleteMember);
 };
 
-module.exports = { createMemberChoice, deleteMemberChoice };
+module.exports = { createMemberChoice, deleteMemberChoice, deleteMember };
