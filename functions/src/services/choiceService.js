@@ -39,7 +39,9 @@ const getGroupCategoryResultByMemberId = async (client, memberId) => {
   const member = memberList.reduce((result, m) => {
     const a = result.find(({ id }) => id === m.id);
     a
-      ? a.memberList.push(m.name)
+      ? a.memberList.includes(m.name)
+        ? a
+        : a.memberList.push(m.name)
       : result.push({ id: m.id, memberList: [m.name] });
     return result;
   }, []);
