@@ -19,6 +19,7 @@
     "dotenv": "^16.0.3",
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^4.1.0",
+    "firebase-tools": "^11.17.0",
     "helmet": "^6.0.0",
     "hpp": "^0.2.3",
     "nanoid": "2.1.11",

@@ -86,7 +86,6 @@ const getGroupResultDetail = async (client, memberId) => {
         });
     return result;
   }, []);
-  console.log(categoryList);
 
   const choice = categoryList.reduce((result, c) => {
     const a = result.find(({ id }) => id === c.id);
@@ -94,7 +93,7 @@ const getGroupResultDetail = async (client, memberId) => {
       ? a.categoryList.push({
           id: c.category_id,
           name: c.category,
-          subcategoryList: [c.subcategoryList],
+          subcategoryList: c.subcategoryList,
         })
       : result.push({
           id: c.id,
@@ -104,7 +103,7 @@ const getGroupResultDetail = async (client, memberId) => {
             {
               id: c.category_id,
               name: c.category,
-              subcategoryList: [c.subcategoryList],
+              subcategoryList: c.subcategoryList,
             },
           ],
         });
